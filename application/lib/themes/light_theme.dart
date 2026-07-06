@@ -11,4 +11,5 @@ class LightTheme {
   static const IconData iconData = IconData(0x1f3c0, fontFamily: 'MaterialIcons');
 
   static const PrimaryButtonColor = Color(0xFFD99A2B);
+  static const SecondaryButtonColor = Color(0xFFD99A2B);
 }
