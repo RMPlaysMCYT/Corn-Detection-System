@@ -28,4 +28,6 @@ model.compile(
     metrics=['accuracy']
 )
 
+history = model.fit(datagen.flow(x_train, y_train, batch_size=64), epochs=50, validation_data(x_test,y_test))
+
 model.Summary()
