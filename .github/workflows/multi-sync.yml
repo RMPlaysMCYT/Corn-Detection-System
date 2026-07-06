@@ -19,14 +19,14 @@ jobs:
           # Extract the repository name dynamically
           REPO_NAME=${GITHUB_REPOSITORY#*/}
           
-          # # 1. Setup and Push to GitLab
-          # GITLAB_URL="https://${{ secrets.RMPLAYSMCYT_GITLAB }}:${{ secrets.GITLAB_PAT }}@gitlab.com/${{ secrets.GITLAB_USERNAME }}/$REPO_NAME.git"
-          # git remote add gitlab "$GITLAB_URL"
-          # git push gitlab --all --force
-          # git push gitlab --tags --force
+          # 1. Setup and Push to GitLab
+          GITLAB_URL="https://RMPlaysMCYT:${{ secrets.GITLAB_PAT }}@gitlab.com/${{ secrets.GITLAB_USERNAME }}/$REPO_NAME.git"
+          git remote add gitlab "$GITLAB_URL"
+          git push gitlab --all --force
+          git push gitlab --tags --force
           
           # 2. Setup and Push to Codeberg
-          CODEBERG_URL="https://${{ secrets.RMPLAYSMCYT }}:${{ secrets.CODEBERG_PAT }}@codeberg.org/${{ secrets.CODEBERG_USERNAME }}/$REPO_NAME.git"
+          CODEBERG_URL="https://RMPlaysMCYT:${{ secrets.CODEBERG_PAT }}@codeberg.org/${{ secrets.CODEBERG_USERNAME }}/$REPO_NAME.git"
           git remote add codeberg "$CODEBERG_URL"
           git push codeberg --all --force
           git push codeberg --tags --force
