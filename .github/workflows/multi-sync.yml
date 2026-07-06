@@ -1,0 +1,32 @@
+name: 3-2-1 Multi-Platform Sync
+
+on:
+  push:
+    branches:
+      - '**'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout GitHub repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to Backup Platforms
+        run: |
+          # Extract the repository name dynamically
+          REPO_NAME=${GITHUB_REPOSITORY#*/}
+          
+          # 1. Setup and Push to GitLab
+          GITLAB_URL="https://${{ secrets.GITLAB_USERNAME }}:${{ secrets.GITLAB_PAT }}@gitlab.com/${{ secrets.GITLAB_USERNAME }}/$REPO_NAME.git"
+          git remote add gitlab "$GITLAB_URL"
+          git push gitlab --all --force
+          git push gitlab --tags --force
+          
+          # 2. Setup and Push to Codeberg
+          CODEBERG_URL="https://${{ secrets.CODEBERG_USERNAME }}:${{ secrets.CODEBERG_PAT }}@codeberg.org/${{ secrets.CODEBERG_USERNAME }}/$REPO_NAME.git"
+          git remote add codeberg "$CODEBERG_URL"
+          git push codeberg --all --force
+          git push codeberg --tags --force
