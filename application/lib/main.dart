@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:application/screens/_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   windowManager.ensureInitialized();
+  await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = WindowOptions(
     size: Size(780, 500),
@@ -18,6 +19,9 @@ void main() {
     await windowManager.show();
     await windowManager.focus();
   });
+
+
+  // final cameras = await availableCameras();
 
   runApp(const MyApp());
 }

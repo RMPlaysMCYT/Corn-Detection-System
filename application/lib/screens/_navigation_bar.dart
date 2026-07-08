@@ -1,5 +1,6 @@
 import 'package:application/screens/camera_screen.dart';
 import 'package:application/screens/home_screen.dart';
+import 'package:application/screens/report_screen.dart';
 import 'package:application/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
   final List<Widget> _screens = [
     const HomeScreen(),
     const CameraScreen(),
+    const ReportScreen(),
     const SettingsScreen(),
   ];
 
@@ -22,12 +24,22 @@ class _NavigationBarState extends State<NavigationBarWidget> {
     return Row(
       children: [
         NavigationRail(
+          minWidth: 72.0,
+          extended: false,
           selectedIndex: _selectedIndex,
           onDestinationSelected: (index) {
             setState(() {
               _selectedIndex = index;
             });
           },
+          selectedIconTheme: IconThemeData(
+            color: Colors.blue,
+            size: 40.0, // Resizes the selected icon
+          ),
+          unselectedIconTheme: IconThemeData(
+            color: Colors.grey,
+            size: 32.0, // Resizes unselected icons
+          ),
           labelType: NavigationRailLabelType.selected,
           destinations: const <NavigationRailDestination>[
             NavigationRailDestination(
@@ -37,6 +49,10 @@ class _NavigationBarState extends State<NavigationBarWidget> {
             NavigationRailDestination(
               icon: Icon(Icons.camera_alt),
               label: Text('Camera'),
+            ),
+            NavigationRailDestination(
+              icon: Icon(Icons.checklist),
+              label: Text('Report'),
             ),
             NavigationRailDestination(
               icon: Icon(Icons.settings),
