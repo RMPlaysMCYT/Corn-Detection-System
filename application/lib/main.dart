@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:application/screens/home_screen.dart';
+import 'package:application/screens/_navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -31,20 +31,20 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3),
-          ()=>Navigator.pushReplacement(context,
-                                        MaterialPageRoute(builder:
-                                                          (context) => 
-                                                          HomeScreen()
-                                                         )
-                                       )
-         );
+    Timer(
+      Duration(seconds: 3),
+      () => Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => NavigationBarWidget()),
+      ),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child:FlutterLogo(size:MediaQuery.of(context).size.height)
+      child: FlutterLogo(size: MediaQuery.of(context).size.height),
     );
   }
 }

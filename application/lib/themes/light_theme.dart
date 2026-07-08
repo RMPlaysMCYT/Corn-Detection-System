@@ -6,7 +6,7 @@ class LightTheme {
   static const TextStyle titleTextStyle = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: Colors.(0xFFD99A2B) ,
+    color: Color(0xFFD99A2B) ,
   );
   static const IconData iconData = IconData(0x1f3c0, fontFamily: 'MaterialIcons');
 
