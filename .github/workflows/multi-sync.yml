@@ -27,3 +27,8 @@ jobs:
           git remote add codeberg "$CODEBERG_URL"
           git push codeberg --all --force
           git push codeberg --tags --force
+
+          GITEA_URL="https://RMPlaysMCYT:${{ secrets.GITEA_PAT }}@gitea.com/RMPlaysMCYT/$REPO_NAME.git"
+          git remote add gitea "$GITEA_URL"
+          git push gitea --all --force
+          git push gitea --tags --force
