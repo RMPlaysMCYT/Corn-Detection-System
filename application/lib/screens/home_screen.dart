@@ -9,7 +9,14 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Home")),
       body: Center(child: Column(children: [
-
+        Container(
+          padding: const EdgeInsets.all(16.0),
+          child: Container(
+            width: 300.0,
+            height: 160.0,
+            color: Colors.blue,
+          )
+        )
                     ]
                 )),
     );
