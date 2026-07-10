@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:application/utilities/buttons.dart';
 import 'package:flutter/material.dart';
 
 class CameraScreen extends StatelessWidget {
@@ -13,8 +14,8 @@ class CameraScreen extends StatelessWidget {
           child: Column(
             children: [
               Container(height: 200, width: 600, color: Colors.blue),
-              const SizedBox(height: 20.0),
-              
+              const SizedBox(height: 16),
+              Group5ButtonBox(text: 'Capture', onPressed: (){})
             ],
           ),
         ),

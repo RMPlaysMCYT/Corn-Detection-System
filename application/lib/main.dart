@@ -21,7 +21,6 @@ void main() async {
     await windowManager.focus();
   });
 
-
   // final cameras = await availableCameras();
 
   runApp(const MyApp());
@@ -38,14 +37,18 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
 
       builder: (context, child) {
         return Scaffold(
-          body: Column(children: [const CustomTitleBar(),
-          Expanded(child: child!)],)
+          body: Column(
+            children: [
+              const CustomTitleBar(),
+              Expanded(child: child!),
+            ],
+          ),
         );
       },
+      home: MyHomePage(),
     );
   }
 }
@@ -77,7 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
 class CustomTitleBar extends StatelessWidget {
   const CustomTitleBar({super.key});
 
@@ -97,15 +99,14 @@ class CustomTitleBar extends StatelessWidget {
               child: Text(
                 'Corn Detection System',
                 style: TextStyle(
-                  color: Colors.white, 
-                  fontSize: 12, 
-                  fontWeight: FontWeight.w600
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            
+
             const Spacer(), // Pushes buttons to the right
-            
             // Minimize Button
             IconButton(
               icon: const Icon(Icons.remove, color: Colors.white, size: 24),
@@ -116,10 +117,14 @@ class CustomTitleBar extends StatelessWidget {
               onPressed: () async => await windowManager.minimize(),
             ),
             const SizedBox(width: 12),
-            
+
             // Maximize / Restore Button
             IconButton(
-              icon: const Icon(Icons.crop_square, color: Colors.white, size: 24),
+              icon: const Icon(
+                Icons.crop_square,
+                color: Colors.white,
+                size: 24,
+              ),
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
               splashRadius: 16,
@@ -133,7 +138,7 @@ class CustomTitleBar extends StatelessWidget {
               },
             ),
             const SizedBox(width: 12),
-            
+
             // Close Button
             IconButton(
               icon: const Icon(Icons.close, color: Colors.white, size: 24),
