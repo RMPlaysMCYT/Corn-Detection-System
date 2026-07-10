@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class ProcessingScreen extends StatefulWidget {
+  const ProcessingScreen({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<ProcessingScreen> createState() => _ProcessingScreenState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _ProcessingScreenState extends State<ProcessingScreen> {
   @override
   Widget build(BuildContext context) {
     return const Placeholder();
