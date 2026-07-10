@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cornseedapplication/utilities/dashboardCard.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -7,112 +8,29 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      body: Container(
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                spacing: 12.0,
+              child: Wrap(
+                spacing: 16.0, // Horizontal space between cards
+                runSpacing: 16.0, // Vertical space when wrapping to a new line
+                alignment: WrapAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    width: 200.0,
-                    height: 160.0,
-                    color: Colors.blue,
-                    child: Row(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Total Corn Detected",
-                            style: TextStyle(
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 5.0, // Softness of the shadow
-                                  color: Colors.black.withAlpha(
-                                    128,
-                                  ), // Shadow color
-                                  offset: Offset(
-                                    4.0,
-                                    4.0,
-                                  ), // X and Y displacement
-                                ),
-                              ],
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  dashboardCard(
+                    text: "Total Corn Detected",
+                    value: "100",
+                    backgroundColor: Colors.blue,
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    width: 200.0,
-                    height: 160.0,
-                    color: Colors.blue,
-                    child: Row(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Total Corn Passed",
-                            style: TextStyle(
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 5.0, // Softness of the shadow
-                                  color: Colors.black.withAlpha(
-                                    128,
-                                  ), // Shadow color
-                                  offset: Offset(
-                                    4.0,
-                                    4.0,
-                                  ), // X and Y displacement
-                                ),
-                              ],
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  dashboardCard(
+                    text: "Total Corn Passed",
+                    value: "80",
+                    backgroundColor: Colors.green,
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 5.0),
-                    width: 200.0,
-                    height: 160.0,
-                    color: Colors.blue,
-                    child: Row(
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Total Corn Defected",
-                            style: TextStyle(
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(
-                                  blurRadius: 5.0, // Softness of the shadow
-                                  color: Colors.black.withAlpha(
-                                    128,
-                                  ), // Shadow color
-                                  offset: Offset(
-                                    4.0,
-                                    4.0,
-                                  ), // X and Y displacement
-                                ),
-                              ],
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                  dashboardCard(
+                    value: "20",
+                    text: "Total Corn Defected",
+                    backgroundColor: Colors.red,
                   ),
                 ],
               ),

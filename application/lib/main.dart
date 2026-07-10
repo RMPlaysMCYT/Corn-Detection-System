@@ -10,22 +10,23 @@ import 'package:nativeapi/nativeapi.dart' hide TitleBarStyle;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  bool isDesktop = !kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+  bool isDesktop =
+      !kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
 
-  if(isDesktop) {
-      await windowManager.ensureInitialized();
+  if (isDesktop) {
+    await windowManager.ensureInitialized();
 
-  WindowOptions windowOptions = WindowOptions(
-    size: Size(780, 500),
-    center: true,
-    backgroundColor: Colors.transparent,
-    skipTaskbar: false,
-    titleBarStyle: TitleBarStyle.hidden,
-  );
-  windowManager.waitUntilReadyToShow(windowOptions, () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
+    WindowOptions windowOptions = WindowOptions(
+      size: Size(780, 500),
+      center: true,
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
   }
 
   // final cameras = await availableCameras();
@@ -38,25 +39,48 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Corn Detection System',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      debugShowCheckedModeBanner: false,
+    bool isDesktop =
+        !kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+    if (isDesktop) {
+      return MaterialApp(
+        title: 'Corn Detection System',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        debugShowCheckedModeBanner: false,
 
-      builder: (context, child) {
-        return Scaffold(
-          body: Column(
-            children: [
-              const CustomTitleBar(),
-              Expanded(child: child!),
-            ],
-          ),
-        );
-      },
-      home: MyHomePage(),
-    );
+        builder: (context, child) {
+          return Scaffold(
+            body: Column(
+              children: [
+                const CustomTitleBar(),
+                Expanded(child: child!),
+              ],
+            ),
+          );
+        },
+        home: MyHomePage(),
+      );
+    } else {
+      return MaterialApp(
+        title: 'Corn Detection System',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          return Scaffold(
+            body: Column(
+              children: [
+                SizedBox(height: 32), // Placeholder for title bar height
+                Expanded(child: child!),
+              ],
+            ),
+          );
+        },
+        home: MyHomePage(),
+      );
+    }
   }
 }
 
