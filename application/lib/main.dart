@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cornseedapplication/screens/_navigation_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:window_manager/window_manager.dart';
@@ -7,7 +9,11 @@ import 'package:nativeapi/nativeapi.dart' hide TitleBarStyle;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await windowManager.ensureInitialized();
+
+  bool isDesktop = !kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS);
+
+  if(isDesktop) {
+      await windowManager.ensureInitialized();
 
   WindowOptions windowOptions = WindowOptions(
     size: Size(780, 500),
@@ -20,6 +26,7 @@ void main() async {
     await windowManager.show();
     await windowManager.focus();
   });
+  }
 
   // final cameras = await availableCameras();
 
