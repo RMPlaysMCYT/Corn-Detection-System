@@ -48,7 +48,7 @@ class dashboardCard extends StatelessWidget {
                   offset: const Offset(2.0, 2.0),
                 ),
               ],
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
