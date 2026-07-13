@@ -15,10 +15,10 @@ class ReportScreen extends StatelessWidget {
           children: [
             // Header row
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Padding(padding: EdgeInsets.all(8.0)),
-                Text(ReportsPage), // Make sure ReportsPage is defined
+                const Padding(padding: EdgeInsets.all(16.0)),
+                Text(ReportsPage, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.normal)), // Make sure ReportsPage is defined
               ],
             ),
             const SizedBox(height: 8.0), // Space at the top
@@ -72,23 +72,27 @@ class ReportScreen extends StatelessWidget {
                       ),
                     ),
                     // Map the data list into individual bar groups
-                    barGroups: weeklySummary
-                        .asMap()
-                        .entries
-                        .map(
-                          (entry) => BarChartGroupData(
-                            x: entry.key,
-                            barRods: [
-                              BarChartRodData(
-                                toY: entry.value,
-                                color: Colors.blue,
-                                width: 16,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ],
+                    barGroups: List.generate(7, (index) {
+                      return BarChartGroupData(
+                        x: index,
+                        barRods: [
+                          // First dataset (weeklySummary)
+                          BarChartRodData(
+                            toY: weeklySummary[index],
+                            color: Colors.blue,
+                            width: 8,
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                        )
-                        .toList(),
+                          // Second dataset (weeklySummary2)
+                          BarChartRodData(
+                            toY: weeklySummary2[index],
+                            color: Colors.orange,
+                            width: 8,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ],
+                      );
+                    }),
                   ),
                 ),
               ),

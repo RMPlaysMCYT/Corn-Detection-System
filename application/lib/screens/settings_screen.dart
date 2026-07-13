@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cornseedapplication/utilities/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,6 +26,13 @@ class SettingsScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Padding(padding: EdgeInsets.all(16.0)),
+                Text(SettingsPage, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.normal)), // Make sure ReportsPage is defined
+              ],
+            ),
             Row(
               children: [
                 TextButton(
