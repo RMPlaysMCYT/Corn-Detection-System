@@ -8,9 +8,7 @@ Original file is located at
 """
 
 import tensorflow as tf
-
 import keras
-
 from keras._tf_keras.keras.preprocessing.image import ImageDataGenerator
 
 datagen = ImageDataGenerator(
@@ -35,8 +33,6 @@ drive.mount('/content/drive')
 
 import os
 import shutil
-
-
 base_path = '/content/drive/MyDrive/CornSeeds/corn_data/MaizeData'
 train_path = '/content/drive/MyDrive/CornSeeds/corn_data/labeled_data'
 
@@ -103,7 +99,6 @@ cnn_process1.add(
 )
 
 """# SECOND LAYER"""
-
 cnn_process1.add(
     tf.keras.layers.Conv2D(
         filters=32,
@@ -119,10 +114,8 @@ cnn_process1.add(
 )
 
 cnn_process1.add(tf.keras.layers.Flatten())
-
 cnn_process1.add(tf.keras.layers.Dense(units=128, activation='relu'))
 cnn_process1.add(tf.keras.layers.Dropout(0.5))
-
 cnn_process1.add(tf.keras.layers.Dense(units=1, activation='sigmoid'))
 
 cnn_process1.compile(
@@ -130,22 +123,17 @@ cnn_process1.compile(
     loss='binary_crossentropy',
     metrics=['accuracy']
 )
-
 cnn_process1.fit(x=training_set1, validation_data=testing_set1, epochs=20)
 
 cnn_process1.save('/content/drive/MyDrive/CornSeeds/corn_seed_quality_detection_v0_0_1.keras')
 
 import tensorflow as tf
-
 converter = tf.lite.TFLiteConverter.from_keras_model(cnn_process1)
-
 converter.optimizations = [tf.lite.Optimize.DEFAULT]
-
 tflite_model = converter.convert()
 
 with open('/content/drive/MyDrive/CornSeeds/corn_seed_quality_detection_v0_0_1.tflite', 'wb') as f:
     f.write(tflite_model)
-
 """* PROCESSING"""
 
 import numpy as np
