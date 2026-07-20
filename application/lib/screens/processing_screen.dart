@@ -10,6 +10,8 @@ class ProcessingScreen extends StatefulWidget {
 class _ProcessingScreenState extends State<ProcessingScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return const Center(
+    child:Row(children:[
+    ]));
   }
 }
