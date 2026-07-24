@@ -1,0 +1,8 @@
+venv
+venv_directml
+
+/venv/
+/venv_directml/
+
+NewCornData
+/NewCornData/
