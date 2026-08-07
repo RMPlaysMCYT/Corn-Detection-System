@@ -60,10 +60,10 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(16.0),
-                        child: FloatingActionButton(
+                        child: TextButton(
                           onPressed: () {
                           },
-                          child: Text('Start Sorting'),
+                          child: Text('Start Sorting', style: TextStyle(fontSize: 18)),
                         ),
                       ),
                       Padding(
