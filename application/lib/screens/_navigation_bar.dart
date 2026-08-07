@@ -46,10 +46,10 @@ class _NavigationBarState extends State<NavigationBarWidget> {
               icon: Icon(Icons.home),
               label: Text('Home'),
             ),
-            NavigationRailDestination(
-              icon: Icon(Icons.camera_alt),
-              label: Text('Camera'),
-            ),
+            // NavigationRailDestination(
+            //   icon: Icon(Icons.camera_alt),
+            //   label: Text('Camera'),
+            // ),
             NavigationRailDestination(
               icon: Icon(Icons.checklist),
               label: Text('Report'),

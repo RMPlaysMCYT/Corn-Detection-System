@@ -55,9 +55,17 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 16.0), // Space at the bottom
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: FloatingActionButton(
+                          onPressed: () {
+                          },
+                          child: Text('Start Sorting'),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
