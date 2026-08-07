@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cornseedapplication/screens/sorting_screen.dart';
 import 'package:cornseedapplication/utilities/dashboardCard.dart';
 import 'package:cornseedapplication/utilities/texts.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,11 @@ class HomeScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: TextButton(
                           onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SortingScreen()),
+                            );
                           },
                           child: Text('Start Sorting', style: TextStyle(fontSize: 18)),
                         ),
