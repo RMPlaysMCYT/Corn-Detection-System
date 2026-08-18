@@ -1,3 +1,4 @@
+import 'package:cornseedapplication/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class SortingScreenFinished extends StatefulWidget {
@@ -15,8 +16,20 @@ class _SortingScreenFinishedState extends State<SortingScreenFinished> {
         child: Container(
           child: Row(
             children: [
-              Text('Sorting Screen Finished')
-
+              Text('Sorting Screen Finished'),
+              Text('Total Seeds Sorted'),
+              Text('Sorting Healthy Seeds: '),
+              Text('Sorting Unhealthy Seeds: '),
+              Column(
+                children: [
+                  ElevatedButton(onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    );
+                  }, child: const Text("Exit"))
+                ],
+              )
             ],
           )
         ),
