@@ -17,7 +17,7 @@ class _SortingScreenFinishedState extends State<SortingScreenFinished> {
           child: Row(
             children: [
               Text('Sorting Screen Finished'),
-              Text('Total Seeds Sorted'),
+              Text('Total Seeds Sorted: '),
               Text('Sorting Healthy Seeds: '),
               Text('Sorting Unhealthy Seeds: '),
               Column(
