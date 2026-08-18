@@ -12,7 +12,14 @@ class _SortingScreenFinishedState extends State<SortingScreenFinished> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('Sorting Screen'),
+        child: Container(
+          child: Row(
+            children: [
+              Text('Sorting Screen Finished')
+
+            ],
+          )
+        ),
       ),
     );
   }
