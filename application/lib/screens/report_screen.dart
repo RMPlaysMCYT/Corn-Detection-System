@@ -18,7 +18,13 @@ class ReportScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const Padding(padding: EdgeInsets.all(16.0)),
-                Text(ReportsPage, style: const TextStyle(fontSize: 24.0, fontWeight: FontWeight.normal)), // Make sure ReportsPage is defined
+                Text(
+                  ReportsPage,
+                  style: const TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ), // Make sure ReportsPage is defined
               ],
             ),
             const SizedBox(height: 8.0), // Space at the top

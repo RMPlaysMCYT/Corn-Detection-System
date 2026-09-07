@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cornseedapplication/screens/sorting_screen.dart';
 import 'package:cornseedapplication/utilities/dashboardCard.dart';
 import 'package:cornseedapplication/utilities/texts.dart';
