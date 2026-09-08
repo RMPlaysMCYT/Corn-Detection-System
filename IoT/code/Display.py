@@ -9,6 +9,12 @@ from hardware import Camera, Servo
 from model import CornClassifier
 from sorter import Sorter
 
+import os
+
+BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
+MODEL_PATH = os.path.normpath(MODEL_PATH)  # cleans up the ".." into a proper path
+
 # -------------------- Theme constants (same as before) --------------------
 THEME_BG = "#2b2b2b"
 THEME_FG = "#e8e8e8"
