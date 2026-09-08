@@ -6,3 +6,6 @@ venv_directml
 
 NewCornData
 /NewCornData/
+
+__pycache__
+/__pycache__/
