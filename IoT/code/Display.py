@@ -11,9 +11,7 @@ from sorter import Sorter
 
 import os
 
-BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
-MODEL_PATH = os.path.normpath(MODEL_PATH)  # cleans up the ".." into a proper path
+
 
 # -------------------- Theme constants (same as before) --------------------
 THEME_BG = "#2b2b2b"
@@ -60,7 +58,9 @@ class CornSorterApp:
 
         # ---------- Initialise Hardware & Model ----------
         # Model path – adjust to your actual .tflite file
-        MODEL_PATH = "path/to/your/seed_model.tflite"
+        BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
+        MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
+        MODEL_PATH = os.path.normpath(MODEL_PATH)  # cleans up the ".." into a proper path
         self.classifier = CornClassifier(MODEL_PATH)
         print("Model loaded.")
 
