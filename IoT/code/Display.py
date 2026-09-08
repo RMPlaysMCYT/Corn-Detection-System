@@ -51,12 +51,10 @@ class CornSorterApp:
         )
         apply_theme(root)
 
-        # Container for pages
         self.container = tk.Frame(root, bg=THEME_BG)
         self.container.place(x=0, y=0, width=400, height=300)
 
         
-        # Model path – adjust to your actual .tflite file
         BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
         MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
         MODEL_PATH = os.path.normpath(MODEL_PATH)  # cleans up the ".." into a proper path
@@ -75,7 +73,8 @@ class CornSorterApp:
         
         self.show_main_page()
 
-    # ---------- Page Management ----------
+
+    
     def _clear_container(self):
         for widget in self.container.winfo_children():
             widget.destroy()
@@ -151,7 +150,7 @@ class CornSorterApp:
         self.sort_unhealthy = tk.Label(self.sort_frame, text="0", bg=THEME_BG)
         self.sort_unhealthy.place(x=200, y=165, width=180, height=30)
 
-        # Disabled start button (visual)
+        
         tk.Button(
             self.sort_frame,
             text="START SORTING",
@@ -239,7 +238,7 @@ class CornSorterApp:
             self.sorter = None
         self.show_main_page()
 
-    # ---------- Cleanup ----------
+    
     def on_closing(self):
         """Release hardware when window is closed."""
         if self.sorter:
@@ -248,7 +247,7 @@ class CornSorterApp:
         self.servo.detach()
         self.root.destroy()
 
-# -------------------- Run the App --------------------
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = CornSorterApp(root)
