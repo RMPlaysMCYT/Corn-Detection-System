@@ -6,12 +6,12 @@ import time
 
 # Import our modules
 from hardware import Camera, Servo
-from model import CornClassifier
+from model import CornClassifier, MockClassifier
 from sorter import Sorter
 
 import os
 
-
+USE_MOCK_MODEL = True
 
 # -------------------- Theme constants (same as before) --------------------
 THEME_BG = "#2b2b2b"
@@ -61,9 +61,11 @@ class CornSorterApp:
         BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
         MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
         MODEL_PATH = os.path.normpath(MODEL_PATH)  # cleans up the ".." into a proper path
-        self.classifier = CornClassifier(MODEL_PATH)
-        print("Model loaded.")
-
+        if USE_MOCK_MODEL:
+            self.classifier = MockClassifier(healthy_bias=0.7)
+        else:
+            self.classifier = CornClassifier(MODEL_PATH)
+            print("Model loaded.")
         # Camera and Servo
         self.camera = Camera(camera_id=0)
         self.servo = Servo(pin=18)

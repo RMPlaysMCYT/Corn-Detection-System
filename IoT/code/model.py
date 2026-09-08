@@ -3,6 +3,26 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
+import random
+
+
+class MockClassifier:
+    """Drop-in replacement for CornClassifier — returns random results, no model needed."""
+    def __init__(self, model_path=None, healthy_bias=0.7):
+        # healthy_bias: probability a given seed is classified "healthy" (0.0–1.0)
+        self.healthy_bias = healthy_bias
+        print("[MockClassifier] Initialized (no real model loaded)")
+
+    def classify(self, image):
+        is_healthy = random.random() < self.healthy_bias
+        confidence = random.uniform(0.75, 0.99)
+        pred_index = 0 if is_healthy else 1
+        return pred_index, confidence
+
+    def is_healthy(self, image, threshold=0.8):
+        idx, conf = self.classify(image)
+        return (idx == 0, conf)
+
 class CornClassifier:
     """Loads and runs the TFLite model."""
     def __init__(self, model_path):

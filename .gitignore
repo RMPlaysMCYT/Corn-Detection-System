@@ -11,3 +11,4 @@ __pycache__
 /__pycache__/
 
 /IoT/model/
+/IoT/processed_data**.zip
