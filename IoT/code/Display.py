@@ -1,10 +1,9 @@
-# display.py
 import tkinter as tk
 from tkinter import ttk
 import threading
 import time
 
-# Import our modules
+
 from hardware import Camera, Servo
 from model import CornClassifier, MockClassifier
 from sorter import Sorter
@@ -13,7 +12,7 @@ import os
 
 USE_MOCK_MODEL = True
 
-# -------------------- Theme constants (same as before) --------------------
+
 THEME_BG = "#2b2b2b"
 THEME_FG = "#e8e8e8"
 THEME_ACCENT = "#4a9eff"
@@ -39,7 +38,7 @@ def apply_theme(root):
     style.configure(".", background=THEME_BG, foreground=THEME_FG,
                     fieldbackground=THEME_FIELD_BG, font=THEME_FONT)
 
-# -------------------- Main Application --------------------
+    
 class CornSorterApp:
     def __init__(self, root):
         self.root = root
@@ -56,7 +55,7 @@ class CornSorterApp:
         self.container = tk.Frame(root, bg=THEME_BG)
         self.container.place(x=0, y=0, width=400, height=300)
 
-        # ---------- Initialise Hardware & Model ----------
+        
         # Model path – adjust to your actual .tflite file
         BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
         MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
@@ -66,14 +65,14 @@ class CornSorterApp:
         else:
             self.classifier = CornClassifier(MODEL_PATH)
             print("Model loaded.")
-        # Camera and Servo
+            
         self.camera = Camera(camera_id=0)
         self.servo = Servo(pin=18)
 
-        # Sorter (will be created when starting)
+        
         self.sorter = None
 
-        # Show main page
+        
         self.show_main_page()
 
     # ---------- Page Management ----------
