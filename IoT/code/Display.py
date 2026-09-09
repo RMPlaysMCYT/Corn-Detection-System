@@ -57,7 +57,7 @@ class CornSorterApp:
         
         BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
         MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
-        MODEL_PATH = os.path.normpath(MODEL_PATH)  # cleans up the ".." into a proper path
+        MODEL_PATH = os.path.normpath(MODEL_PATH)  
         if USE_MOCK_MODEL:
             self.classifier = MockClassifier(healthy_bias=0.7)
         else:
@@ -193,7 +193,7 @@ class CornSorterApp:
             font=("Helvetica", 10, "bold")
         ).place(x=60, y=220, width=280, height=50)
 
-    # ---------- Sorting Control ----------
+
     def start_sorting(self):
         """Called when user clicks START SORTING."""
         # Reset counters in UI
@@ -204,7 +204,6 @@ class CornSorterApp:
         # Switch to sorting page
         self.show_sorting_page()
 
-        # Create the sorter with callbacks
         self.sorter = Sorter(
             camera=self.camera,
             servo=self.servo,
