@@ -11,8 +11,8 @@ class Sorter:
         self.camera = camera
         self.servo = servo
         self.classifier = classifier
-        self.hopper_empty_callback = hopper_empty_callback   # called when done
-        self.update_callback = update_callback               # called after each seed
+        self.hopper_empty_callback = hopper_empty_callback   
+        self.update_callback = update_callback               
         
         self.running = False
         self.thread = None
