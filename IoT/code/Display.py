@@ -196,12 +196,10 @@ class CornSorterApp:
 
     def start_sorting(self):
         """Called when user clicks START SORTING."""
-        # Reset counters in UI
         self.main_seeds.config(text="0")
         self.main_healthy.config(text="0")
         self.main_unhealthy.config(text="0")
         
-        # Switch to sorting page
         self.show_sorting_page()
 
         self.sorter = Sorter(
