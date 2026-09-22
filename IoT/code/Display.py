@@ -66,14 +66,8 @@ class CornSorterApp:
             
         self.camera = Camera(camera_id=0)
         self.servo = Servo(pin=18)
-
-        
         self.sorter = None
-
-        
         self.show_main_page()
-
-
     
     def _clear_container(self):
         for widget in self.container.winfo_children():
