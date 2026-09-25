@@ -140,7 +140,6 @@ class CornSorterApp:
         self.sort_unhealthy = tk.Label(self.sort_frame, text="0", bg=THEME_BG)
         self.sort_unhealthy.place(x=200, y=165, width=180, height=30)
 
-        
         tk.Button(
             self.sort_frame,
             text="START SORTING",
@@ -191,7 +190,6 @@ class CornSorterApp:
         self.main_unhealthy.config(text="0")
         
         self.show_sorting_page()
-
         self.sorter = Sorter(
             camera=self.camera,
             servo=self.servo,
@@ -233,7 +231,6 @@ class CornSorterApp:
         self.camera.release()
         self.servo.detach()
         self.root.destroy()
-
 
 if __name__ == "__main__":
     root = tk.Tk()
