@@ -2,11 +2,9 @@
 import cv2
 import numpy as np
 import tensorflow as tf
-
 import random
 
 class MockClassifier:
-    """Drop-in replacement for CornClassifier — returns random results, no model needed."""
     def __init__(self, model_path=None, healthy_bias=0.7):
         
         self.healthy_bias = healthy_bias
