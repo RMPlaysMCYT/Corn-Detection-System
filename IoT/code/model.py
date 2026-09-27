@@ -6,7 +6,6 @@ import random
 
 class MockClassifier:
     def __init__(self, model_path=None, healthy_bias=0.7):
-        
         self.healthy_bias = healthy_bias
         print("[MockClassifier] Initialized (no real model loaded)")
 
@@ -35,7 +34,6 @@ class CornClassifier:
     def classify(self, image):
         img = cv2.resize(image, (self.input_width, self.input_height))
         input_data = np.expand_dims(img, axis=0).astype(np.float32)
-
         self.interpreter.set_tensor(self.input_details[0]['index'], input_data)
         self.interpreter.invoke()
         output = self.interpreter.get_tensor(self.output_details[0]['index'])
