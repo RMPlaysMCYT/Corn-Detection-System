@@ -62,14 +62,8 @@ class CornSorterApp:
             
         self.camera = Camera(camera_id=0)
         self.servo = Servo(pin=18)
-
-        
         self.sorter = None
-
-        
         self.show_main_page()
-
-
     
     def _clear_container(self):
         for widget in self.container.winfo_children():
@@ -146,7 +140,6 @@ class CornSorterApp:
         self.sort_unhealthy = tk.Label(self.sort_frame, text="0", bg=THEME_BG)
         self.sort_unhealthy.place(x=200, y=165, width=180, height=30)
 
-        
         tk.Button(
             self.sort_frame,
             text="START SORTING",
@@ -192,14 +185,11 @@ class CornSorterApp:
 
     def start_sorting(self):
         """Called when user clicks START SORTING."""
-        # Reset counters in UI
         self.main_seeds.config(text="0")
         self.main_healthy.config(text="0")
         self.main_unhealthy.config(text="0")
         
-        # Switch to sorting page
         self.show_sorting_page()
-
         self.sorter = Sorter(
             camera=self.camera,
             servo=self.servo,
@@ -241,7 +231,6 @@ class CornSorterApp:
         self.camera.release()
         self.servo.detach()
         self.root.destroy()
-
 
 if __name__ == "__main__":
     root = tk.Tk()
