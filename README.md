@@ -1,7 +1,6 @@
 # Coin-Detection-System-
 This Project was a compliance for the Capstone Project, However the Project is Closed-Source but we will make it open once it's completed
 
-
 # Frameworks used
 - Flutter
 - Python 3.11.9
@@ -23,3 +22,9 @@ This Project was a compliance for the Capstone Project, However the Project is C
     * Android SDK Platform-Tools
     * CMake
     * NDK (Side by side)
+
+### Developed by:
+ * Ronnel Mitra
+ * Madilyn Rodriguez
+ * Marc Arthur Lazarte
+ * Marjorie Cinco
