@@ -1,4 +1,3 @@
-# hardware.py
 import time
 import cv2
 import platform

@@ -1,4 +1,3 @@
-# sorter.py
 import threading
 import time
 

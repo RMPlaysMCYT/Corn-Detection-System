@@ -2,16 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 import time
-
-
 from hardware import Camera, Servo
 from model import CornClassifier, MockClassifier
 from sorter import Sorter
-
 import os
 
 USE_MOCK_MODEL = True
-
 
 THEME_BG = "#2b2b2b"
 THEME_FG = "#e8e8e8"
