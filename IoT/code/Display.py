@@ -7,7 +7,7 @@ from model import CornClassifier, MockClassifier
 from sorter import Sorter
 import os
 
-USE_MOCK_MODEL = FALSE
+USE_MOCK_MODEL = False
 
 THEME_BG = "#2b2b2b"
 THEME_FG = "#e8e8e8"
