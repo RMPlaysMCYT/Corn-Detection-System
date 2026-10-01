@@ -6,9 +6,6 @@ import 'package:flutter/services.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-
-  // Add Keys anyway:
-
   void _exitApplication() {
     if (Platform.isAndroid) {
       SystemNavigator.pop(); 
@@ -18,7 +15,6 @@ class SettingsScreen extends StatelessWidget {
       exit(0);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +36,7 @@ class SettingsScreen extends StatelessWidget {
                     fixedSize: const Size(200, 50), // Width: 200, Height: 50
                   ),
                   onPressed: () {},
-                  child: const Text('About'),
+                  child: const Text('About the System'),
                 ),
               ],
             ),

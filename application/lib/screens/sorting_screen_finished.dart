@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class SortingScreenFinished extends StatefulWidget {
   const SortingScreenFinished({super.key});
-
   @override
   _SortingScreenFinishedState createState() => _SortingScreenFinishedState();
 }

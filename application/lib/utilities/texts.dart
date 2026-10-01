@@ -7,3 +7,4 @@ const TotalCornDefectedText = "Total Corn Defected";
 
 const ReportsPage = "Reports";
 const SettingsPage = "Settings";
+const AboutTheSystemText = "About the System";
