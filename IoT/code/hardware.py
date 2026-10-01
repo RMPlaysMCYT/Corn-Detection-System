@@ -3,12 +3,13 @@ import cv2
 import platform
 
 def is_raspberry_pi():
-    try:
-        with open("/proc/device-tree/model", "r", encoding="utf-8") as f:
-            model = f.read()
-        return "Raspberry" in model
-    except Exception:
-        return False
+    return False
+    # try:
+    #     with open("/proc/device-tree/model", "r", encoding="utf-8") as f:
+    #         model = f.read()
+    #     return "Raspberry" in model
+    # except Exception:
+    #     return False
 
 class Camera:
     """Wrapper for the camera (OpenCV). Falls back to mock camera if hardware is missing."""
