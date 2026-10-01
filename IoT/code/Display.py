@@ -40,11 +40,12 @@ class CornSorterApp:
         self.root = root
         root.title("Corn Detection System")
         root.geometry("400x300")
-        root.update_idletasks()
-        root.geometry(
-            f"+{(root.winfo_screenwidth() - 400) // 2}"
-            f"+{(root.winfo_screenheight() - 300) // 2}"
-        )
+        
+        # Add this line for embedded fullscreen mode:
+        root.attributes('-fullscreen', True)
+        
+        # Optional: Add a way to exit fullscreen with the Escape key
+        root.bind("<Escape>", lambda event: root.attributes("-fullscreen", False))
         apply_theme(root)
 
         self.container = tk.Frame(root, bg=THEME_BG)
