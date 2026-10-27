@@ -1,5 +1,7 @@
 import threading
 import time
+import cv2
+import numpy as np
 
 class Sorter:
     """
@@ -46,34 +48,22 @@ class Sorter:
             if frame is None:
                 time.sleep(0.05)
                 continue
-            
-            # 2. Run inference
-            is_healthy, confidence = self.classifier.is_healthy(frame, threshold=0.8)
-            
-            # 3. Update counters
-            self.total_processed += 1
-            if is_healthy:
-                self.healthy_count += 1
-            else:
-                self.unhealthy_count += 1
-                # 4. Reject unhealthy seed (only if confident)
-                self.servo.reject()
-            
-            # 5. Notify GUI about progress (thread‑safe via callback)
+
+            seed_present, _ = self.has_seed(frame)
+
+            # Only classify+count when there IS a seed AND we're not in cooldown
+            if seed_present and not self._in_cooldown():
+                is_healthy, confidence = self.classifier.is_healthy(frame, threshold=0.8)
+                self.total_processed += 1
+                ...
+                self._start_cooldown(1.5)  # seconds, so the same seed isn't counted again
+
+            # Always update the GUI so the user sees it's alive
             if self.update_callback:
                 self.update_callback(self.total_processed,
-                                     self.healthy_count,
-                                     self.unhealthy_count)
-            
-            # 6. CHECK FOR EMPTY HOPPER
-            #    Replace this with your actual sensor logic.
-            #    For demo, we simulate a hopper that runs out after a few seeds.
-            #    In real use, you might check a GPIO pin, or detect no more seeds in frame.
-            if self._is_hopper_empty():
-                self.running = False
-                break
-            
-            # Short delay to prevent thrashing
+                                    self.healthy_count,
+                                    self.unhealthy_count)
+
             time.sleep(0.1)
         
         # When loop ends, call the "complete" callback
@@ -96,3 +86,27 @@ class Sorter:
             import random
             self._max_seeds = random.randint(30, 80)
         return self.total_processed >= self._max_seeds
+
+    def has_seed(self, frame, prev_gray=None):
+        """
+        Returns (seed_present, new_prev_gray).
+        A crude 'is something bright/dark in the ROI' check.
+        """
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Look at the centre region only — where seeds pass
+        h, w = gray.shape
+        roi = gray[int(h*0.25):int(h*0.75), int(w*0.25):int(w*0.75)]
+        # Blur + threshold: seeds are darker than the conveyor belt
+        blur = cv2.GaussianBlur(roi, (7, 7), 0)
+        _, thresh = cv2.threshold(blur, 90, 255, cv2.THRESH_BINARY_INV)
+        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # Count contours with a plausible seed area
+        seed_contours = [c for c in contours if 200 < cv2.contourArea(c) < 20000]
+        return (len(seed_contours) > 0), gray
+
+    def _in_cooldown(self):
+        return time.time() - getattr(self, '_last_trigger', 0) < getattr(self, '_cooldown', 1.5)
+
+    def _start_cooldown(self, seconds):
+        self._last_trigger = time.time()
+        self._cooldown = seconds

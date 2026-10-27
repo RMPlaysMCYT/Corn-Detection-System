@@ -1,6 +1,9 @@
 import time
 import cv2
 import platform
+import numpy as np
+
+from picamera2 import Picamera2
 
 def is_raspberry_pi():
     try:
@@ -10,28 +13,45 @@ def is_raspberry_pi():
     except Exception:
         return False
 
+# hardware.py - Replace the existing Camera class with this one
+
+
 class Camera:
-    """Wrapper for the camera (OpenCV). Falls back to mock camera if hardware is missing."""
+    """
+    Camera wrapper using picamera2, required for Raspberry Pi 5 / Bookworm.
+    Returns frames in BGR format, compatible with the rest of your pipeline.
+    """
     def __init__(self, camera_id=0):
-        self.cap = cv2.VideoCapture(camera_id)
-        self.mock_mode = False
-        if not self.cap.isOpened():
-            print("[WARN] Cannot open camera. Falling back to Mock Camera for testing.")
-            self.mock_mode = True
+        # camera_id is ignored; picamera2 manages the camera automatically
+        self.picam = Picamera2()
+        
+        # 640x480 RGB888 is a good balance for speed and your classifier
+        config = self.picam.create_preview_configuration(
+            main={"size": (640, 480), "format": "RGB888"}
+        )
+        self.picam.configure(config)
+        self.picam.start()
+        
+        # Allow auto-exposure to settle - prevents black frames on startup
+        time.sleep(1.5)
 
     def read_frame(self):
-        if self.mock_mode:
-            import numpy as np
-            # Return a blank black image to satisfy the classifier
-            return np.zeros((480, 640, 3), dtype=np.uint8)
+        try:
+            # capture_array returns an RGB888 numpy array
+            frame_rgb = self.picam.capture_array()
             
-        ret, frame = self.cap.read()
-        return frame if ret else None
+            # Convert RGB to BGR for OpenCV compatibility
+            frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
+            return frame_bgr
+        except Exception as e:
+            print(f"[Camera] capture_array() error: {e}")
+            return None
 
     def release(self):
-        if not self.mock_mode:
-            self.cap.release()
-
+        try:
+            self.picam.stop()
+        except Exception:
+            pass
 
 if platform.system() == "Linux" and is_raspberry_pi():
     try:
