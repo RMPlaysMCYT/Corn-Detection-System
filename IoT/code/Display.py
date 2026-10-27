@@ -9,7 +9,7 @@ import os
 
 USE_MOCK_MODEL = False
 
-THEME_BG = "#2F4858"
+THEME_BG = "#242D32"
 THEME_FG = "#33658A"
 THEME_ACCENT = "#86BBD8"
 THEME_ACCENT_FG = "#F6AE2D"
@@ -53,7 +53,7 @@ class CornSorterApp:
 
         
         BASE_DIR  = os.path.dirname(os.path.abspath(__file__))
-        MODEL_PATH = os.path.join(BASE_DIR, "..", "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
+        MODEL_PATH = os.path.join(BASE_DIR, "model", "OUTPUT_CapstoneProject_corn_seed_quality_detection_128x128_v0_0_1-stream.tflite")
         MODEL_PATH = os.path.normpath(MODEL_PATH)  
         if USE_MOCK_MODEL:
             self.classifier = MockClassifier(healthy_bias=0.7)
@@ -143,8 +143,9 @@ class CornSorterApp:
 
         tk.Button(
             self.sort_frame,
-            text="START SORTING",
-            state="disabled",
+            text="Cancel Sorting",
+            state="normal",
+            command=self.reset_and_return,
             fg="#2b2727",
             bg="#748daa",
             font=("Helvetica", 10, "bold")
@@ -216,6 +217,11 @@ class CornSorterApp:
     def on_sorting_done(self, total, healthy, unhealthy):
         """Called when sorting finishes – switch to complete page."""
         self.root.after(0, self.show_complete_page, total, healthy, unhealthy)
+
+    def on_sorting_cancelled(self, total, healthy, unhealthy):
+        """Called when sorting is cancelled – switch to complete page."""
+        self.root.after(0, self.show_complete_page, total, healthy, unhealthy)
+
 
     def reset_and_return(self):
         """Return to main page and release resources if needed."""

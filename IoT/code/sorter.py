@@ -49,14 +49,20 @@ class Sorter:
                 time.sleep(0.05)
                 continue
 
-            seed_present, _ = self.has_seed(frame)
+            seed_present = self.has_seed(frame)
 
             # Only classify+count when there IS a seed AND we're not in cooldown
             if seed_present and not self._in_cooldown():
                 is_healthy, confidence = self.classifier.is_healthy(frame, threshold=0.8)
                 self.total_processed += 1
-                ...
-                self._start_cooldown(1.5)  # seconds, so the same seed isn't counted again
+                if is_healthy:
+                    self.healthy_count += 1
+                else:
+                    self.unhealthy_count += 1
+                    self.servo.reject()
+                print(f"[Sorter] seed #{self.total_processed}: "
+                    f"{'HEALTHY' if is_healthy else 'UNHEALTHY'} conf={confidence:.2f}")
+                self._start_cooldown(1.5)
 
             # Always update the GUI so the user sees it's alive
             if self.update_callback:
@@ -87,22 +93,37 @@ class Sorter:
             self._max_seeds = random.randint(30, 80)
         return self.total_processed >= self._max_seeds
 
-    def has_seed(self, frame, prev_gray=None):
-        """
-        Returns (seed_present, new_prev_gray).
-        A crude 'is something bright/dark in the ROI' check.
-        """
+    def has_seed(self, frame):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        # Look at the centre region only — where seeds pass
         h, w = gray.shape
-        roi = gray[int(h*0.25):int(h*0.75), int(w*0.25):int(w*0.75)]
-        # Blur + threshold: seeds are darker than the conveyor belt
+
+        # ROI: middle 50%
+        y0, y1 = int(h * 0.25), int(h * 0.75)
+        x0, x1 = int(w * 0.25), int(w * 0.75)
+        roi = gray[y0:y1, x0:x1]
+
         blur = cv2.GaussianBlur(roi, (7, 7), 0)
-        _, thresh = cv2.threshold(blur, 90, 255, cv2.THRESH_BINARY_INV)
-        contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        # Count contours with a plausible seed area
-        seed_contours = [c for c in contours if 200 < cv2.contourArea(c) < 20000]
-        return (len(seed_contours) > 0), gray
+
+        # ---- Try BOTH polarities, save both, then pick the better one ----
+        _, dark_mask  = cv2.threshold(blur, 90, 255, cv2.THRESH_BINARY_INV)  # dark objects
+        _, light_mask = cv2.threshold(blur, 150, 255, cv2.THRESH_BINARY)     # light objects
+
+        # Save debug images every ~20 frames (so we can look at the picture)
+        self._debug_frame_count = getattr(self, '_debug_frame_count', 0) + 1
+        if self._debug_frame_count % 20 == 0:
+            cv2.imwrite("/tmp/sorter_roi.png",       roi)
+            cv2.imwrite("/tmp/sorter_dark_mask.png",  dark_mask)
+            cv2.imwrite("/tmp/sorter_light_mask.png", light_mask)
+            print(f"[Sorter] ROI mean brightness = {roi.mean():.1f}")
+
+        # Pick ONE mask — uncomment the one that matches your scene
+        mask = dark_mask       # use this if corn is DARKER than belt
+        # mask = light_mask    # use this if corn is LIGHTER than belt
+
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        areas = [cv2.contourArea(c) for c in contours]
+        big = [a for a in areas if 200 < a < 20000]
+        return len(big) > 0
 
     def _in_cooldown(self):
         return time.time() - getattr(self, '_last_trigger', 0) < getattr(self, '_cooldown', 1.5)
