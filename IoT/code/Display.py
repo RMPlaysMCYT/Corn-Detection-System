@@ -210,7 +210,7 @@ class CornSorterApp:
             self.sort_seeds.config(text=str(processed))
             self.sort_healthy.config(text=str(healthy))
             self.sort_unhealthy.config(text=str(unhealthy))
-        except Exception:
+        except Exception: 
             pass
 
     def on_sorting_done(self, total, healthy, unhealthy):
