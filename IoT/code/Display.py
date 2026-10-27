@@ -9,12 +9,12 @@ import os
 
 USE_MOCK_MODEL = False
 
-THEME_BG = "#2b2b2b"
-THEME_FG = "#e8e8e8"
-THEME_ACCENT = "#4a9eff"
-THEME_ACCENT_FG = "#ffffff"
-THEME_FIELD_BG = "#3c3c3c"
-THEME_FONT = ("Segoe UI", 10)
+THEME_BG = "#2F4858"
+THEME_FG = "#33658A"
+THEME_ACCENT = "#86BBD8"
+THEME_ACCENT_FG = "#F6AE2D"
+THEME_FIELD_BG = "#F26419"
+THEME_FONT = ("Segoe UI", 12)
 
 def apply_theme(root):
     root.configure(bg=THEME_BG)
