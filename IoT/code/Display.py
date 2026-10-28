@@ -76,7 +76,7 @@ class CornSorterApp:
         self.main_frame.place(x=0, y=0, width=400, height=300)
 
         tk.Label(self.main_frame, text="Corn Detection System", bg=THEME_BG) \
-            .place(x=10, y=10, width=150, height=30)
+            .place(x=10, y=10, width=180, height=30)
 
         tk.Label(self.main_frame, text="", bg="#c27070") \
             .place(x=10, y=50, width=380, height=230)
