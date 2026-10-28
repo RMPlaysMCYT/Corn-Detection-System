@@ -137,7 +137,7 @@ class CornSorterApp:
         self.sort_healthy.place(x=200, y=135, width=180, height=30)
 
         tk.Label(self.sort_frame, text="No. of Unhealthy Seeds", bg=THEME_BG) \
-            .place(x=26, y=165, width=180, height=30)
+            .place(x=20, y=165, width=180, height=30)
         self.sort_unhealthy = tk.Label(self.sort_frame, text="0", bg=THEME_BG)
         self.sort_unhealthy.place(x=200, y=165, width=180, height=30)
 
