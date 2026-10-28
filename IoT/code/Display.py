@@ -119,7 +119,7 @@ class CornSorterApp:
             .place(x=10, y=50, width=380, height=230)
 
         tk.Label(self.sort_frame, text="Corn Detection System", bg=THEME_BG) \
-            .place(x=10, y=10, width=150, height=30)
+            .place(x=10, y=10, width=180, height=30)
 
         tk.Label(self.sort_frame, text="Status", bg=THEME_BG) \
             .place(x=20, y=76, width=180, height=30)
