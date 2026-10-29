@@ -22,17 +22,14 @@ class Camera:
     Returns frames in BGR format, compatible with the rest of your pipeline.
     """
     def __init__(self, camera_id=0):
-        # camera_id is ignored; picamera2 manages the camera automatically
         self.picam = Picamera2()
         
-        # 640x480 RGB888 is a good balance for speed and your classifier
         config = self.picam.create_preview_configuration(
             main={"size": (640, 480), "format": "RGB888"}
         )
         self.picam.configure(config)
         self.picam.start()
         
-        # Allow auto-exposure to settle - prevents black frames on startup
         time.sleep(1.5)
 
     def read_frame(self):
