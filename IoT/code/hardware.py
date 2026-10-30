@@ -13,9 +13,6 @@ def is_raspberry_pi():
     except Exception:
         return False
 
-# hardware.py - Replace the existing Camera class with this one
-
-
 class Camera:
     """
     Camera wrapper using picamera2, required for Raspberry Pi 5 / Bookworm.
@@ -52,8 +49,6 @@ class Camera:
 
 if platform.system() == "Linux" and is_raspberry_pi():
     try:
-        # For Raspberry Pi 5, we import standard AngularServo.
-        # Ensure python3-lgpio is installed so it uses the correct backend automatically.
         from gpiozero import AngularServo
     except Exception:
         print("[WARN] Pi GPIO not available; using mock servo.")
