@@ -58,11 +58,9 @@ if platform.system() == "Linux" and is_raspberry_pi():
                 self.default_angle = default_angle
                 self.reject_angle = reject_angle
                 print(f"[MockServo] Initialized on virtual pin {pin}")
-
             def reject(self):
                 print("[MockServo] Rejecting seed...")
                 time.sleep(0.3)
-
             def detach(self):
                 print("[MockServo] Detached")
     else:
@@ -74,13 +72,11 @@ if platform.system() == "Linux" and is_raspberry_pi():
                 self.default_angle = default_angle
                 self.reject_angle = reject_angle
                 self.servo.angle = default_angle
-
             def reject(self):
                 self.servo.angle = self.reject_angle
                 time.sleep(0.5)
                 self.servo.angle = self.default_angle
                 time.sleep(0.5)
-
             def detach(self):
                 self.servo.detach()
 else:
