@@ -5,6 +5,7 @@ import numpy as np
 
 from picamera2 import Picamera2
 
+
 def is_raspberry_pi():
     try:
         with open("/proc/device-tree/model", "r", encoding="utf-8") as f:
@@ -13,28 +14,25 @@ def is_raspberry_pi():
     except Exception:
         return False
 
+
 class Camera:
     """
     Camera wrapper using picamera2, required for Raspberry Pi 5 / Bookworm.
     Returns frames in BGR format, compatible with the rest of your pipeline.
     """
+
     def __init__(self, camera_id=0):
         self.picam = Picamera2()
-        
         config = self.picam.create_preview_configuration(
             main={"size": (1080, 1080), "format": "RGB888"}
         )
         self.picam.configure(config)
         self.picam.start()
-        
         time.sleep(1.5)
 
     def read_frame(self):
         try:
-            # capture_array returns an RGB888 numpy array
             frame_rgb = self.picam.capture_array()
-            
-            # Convert RGB to BGR for OpenCV compatibility
             frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
             return frame_bgr
         except Exception as e:
@@ -47,10 +45,14 @@ class Camera:
         except Exception:
             pass
 
-CONVEYOR_1_PIN = 18  # Physical pin 12, BCM GPIO 18
-CONVEYOR_2_PIN = 12  # Physical pin 32, BCM GPIO 12
-STOPPER_PIN = 13  # Physical pin 33, BCM GPIO 13
-SORTER_PIN = 19  # Physical pin 35, BCM GPIO 19
+
+# ---------------------------------------------------------------------- #
+#  Servo configuration
+# ---------------------------------------------------------------------- #
+CONVEYOR_1_PIN = 18   # Physical pin 12, BCM GPIO 18
+CONVEYOR_2_PIN = 12   # Physical pin 32, BCM GPIO 12
+STOPPER_PIN = 13      # Physical pin 33, BCM GPIO 13
+SORTER_PIN = 19       # Physical pin 35, BCM GPIO 19
 MIN_PULSE_WIDTH = 0.0005
 MAX_PULSE_WIDTH = 0.0025
 
@@ -76,6 +78,7 @@ else:
 
 class ServoController:
     """Controls two continuous-rotation conveyors and two positional servos."""
+
     def __init__(self):
         if _USE_REAL_SERVOS:
             self.conveyor_1 = ContinuousServo(
@@ -97,6 +100,8 @@ class ServoController:
                 min_pulse_width=MIN_PULSE_WIDTH,
                 max_pulse_width=MAX_PULSE_WIDTH,
             )
+            # Sorter must accept negative angles because the healthy /
+            # unhealthy positions are on opposite sides of centre.
             self.sorter = AngularServo(
                 SORTER_PIN,
                 min_angle=-90,
@@ -112,7 +117,7 @@ class ServoController:
                 "stopper BCM 13, sorter BCM 19"
             )
 
-    def start_conveyors(self, c1_speed=-0.6, c2_speed=-0.6):
+    def start_conveyors(self, c1_speed=-0.8, c2_speed=-0.8):
         print(f"[Servos] Starting conveyors: {c1_speed}, {c2_speed}")
         if _USE_REAL_SERVOS:
             self.conveyor_1.value = c1_speed
@@ -121,8 +126,11 @@ class ServoController:
     def stop_conveyors(self):
         print("[Servos] Stopping conveyors")
         if _USE_REAL_SERVOS:
-            self.conveyor_1.detach()
-            self.conveyor_2.detach()
+            try:
+                self.conveyor_1.detach()
+                self.conveyor_2.detach()
+            except Exception:
+                pass
 
     def trigger_stopper(self):
         print("[Servos] Moving stopper down and back up")
@@ -161,5 +169,8 @@ class ServoController:
                 self.stopper,
                 self.sorter,
             ):
-                servo.detach()
+                try:
+                    servo.detach()
+                except Exception:
+                    pass
         print("[Servos] Detached")
