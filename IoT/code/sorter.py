@@ -64,7 +64,9 @@ class Sorter:
                         self.healthy_count += 1
                     else:
                         self.unhealthy_count += 1
-                        self.servo.reject()
+                    self.servo.sort_seed(
+                        "healthy" if is_healthy else "unhealthy"
+                    )
                     print(f"[Sorter] seed #{self.total_processed}: "
                         f"{'HEALTHY' if is_healthy else 'UNHEALTHY'} conf={confidence:.2f}")
                     self._seed_latched = True
