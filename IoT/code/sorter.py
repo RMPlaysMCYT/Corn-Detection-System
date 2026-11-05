@@ -8,6 +8,8 @@ class Sorter:
     Manages the sorting process in a background thread.
     Communicates with the GUI via callbacks.
     """
+    EMPTY_CONFIRMATION_FRAMES = 10
+
     def __init__(self, camera, servo, classifier, hopper_empty_callback, update_callback):
         self.camera = camera
         self.servo = servo
@@ -74,6 +76,10 @@ class Sorter:
                 self._empty_frames += 1
                 if self._empty_frames >= 3:
                     self._seed_latched = False
+                if self._empty_frames >= self.EMPTY_CONFIRMATION_FRAMES:
+                    print("[Sorter] Hopper appears empty; stopping conveyors")
+                    self.servo.stop_conveyors()
+                    self.running = False
 
             # Always update the GUI so the user sees it's alive
             if self.update_callback:
@@ -89,21 +95,6 @@ class Sorter:
                                        self.healthy_count,
                                        self.unhealthy_count)
     
-    def _is_hopper_empty(self):
-        """
-        Replace with real sensor logic.
-        For simulation, we stop after 30-80 random seeds.
-        You could also detect that the camera frame has no seeds (e.g., using contour detection).
-        """
-        # This is a dummy – you can replace with e.g.:
-        #   return not gpio.input(HOPPER_SENSOR_PIN)
-        # For now, we stop after we've processed a certain number (simulated).
-        # We'll make it stop after about 50 seeds on average.
-        if not hasattr(self, '_max_seeds'):
-            import random
-            self._max_seeds = random.randint(30, 80)
-        return self.total_processed >= self._max_seeds
-
     def has_seed(self, frame):
         h, w = frame.shape[:2]
 

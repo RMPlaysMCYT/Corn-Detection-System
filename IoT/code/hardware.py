@@ -54,6 +54,13 @@ SORTER_PIN = 19  # Physical pin 35, BCM GPIO 19
 MIN_PULSE_WIDTH = 0.0005
 MAX_PULSE_WIDTH = 0.0025
 
+# Tune these positions to match the installed servo horns and linkage.
+STOPPER_HOME_ANGLE = 90
+STOPPER_ACTUATED_ANGLE = 0
+SORTER_CENTER_ANGLE = 0
+SORTER_HEALTHY_ANGLE = 45
+SORTER_UNHEALTHY_ANGLE = -45
+
 
 if platform.system() == "Linux" and is_raspberry_pi():
     try:
@@ -73,13 +80,13 @@ class ServoController:
         if _USE_REAL_SERVOS:
             self.conveyor_1 = ContinuousServo(
                 CONVEYOR_1_PIN,
-                initial_value=0,
+                initial_value=None,
                 min_pulse_width=MIN_PULSE_WIDTH,
                 max_pulse_width=MAX_PULSE_WIDTH,
             )
             self.conveyor_2 = ContinuousServo(
                 CONVEYOR_2_PIN,
-                initial_value=0,
+                initial_value=None,
                 min_pulse_width=MIN_PULSE_WIDTH,
                 max_pulse_width=MAX_PULSE_WIDTH,
             )
@@ -92,20 +99,20 @@ class ServoController:
             )
             self.sorter = AngularServo(
                 SORTER_PIN,
-                min_angle=0,
+                min_angle=-90,
                 max_angle=180,
                 min_pulse_width=MIN_PULSE_WIDTH,
                 max_pulse_width=MAX_PULSE_WIDTH,
             )
-            self.stopper.angle = 180
-            self.sorter.angle = 90
+            self.stopper.angle = STOPPER_HOME_ANGLE
+            self.sorter.angle = SORTER_CENTER_ANGLE
         else:
             print(
                 "[MockServos] Initialized: conveyors BCM 18/12, "
                 "stopper BCM 13, sorter BCM 19"
             )
 
-    def start_conveyors(self, c1_speed=-1.0, c2_speed=-1.0):
+    def start_conveyors(self, c1_speed=-0.6, c2_speed=-0.6):
         print(f"[Servos] Starting conveyors: {c1_speed}, {c2_speed}")
         if _USE_REAL_SERVOS:
             self.conveyor_1.value = c1_speed
@@ -114,27 +121,27 @@ class ServoController:
     def stop_conveyors(self):
         print("[Servos] Stopping conveyors")
         if _USE_REAL_SERVOS:
-            self.conveyor_1.value = 0
-            self.conveyor_2.value = 0
+            self.conveyor_1.detach()
+            self.conveyor_2.detach()
 
     def trigger_stopper(self):
         print("[Servos] Moving stopper down and back up")
         if _USE_REAL_SERVOS:
-            self.stopper.angle = 0
+            self.stopper.angle = STOPPER_ACTUATED_ANGLE
         time.sleep(1.0)
         if _USE_REAL_SERVOS:
-            self.stopper.angle = 180
+            self.stopper.angle = STOPPER_HOME_ANGLE
         time.sleep(0.5)
 
     def sort_seed(self, status):
         if status in ("healthy", "left"):
-            angle = 0
+            angle = SORTER_HEALTHY_ANGLE
             destination = "healthy/left"
         elif status in ("unhealthy", "right"):
-            angle = 180
+            angle = SORTER_UNHEALTHY_ANGLE
             destination = "unhealthy/right"
         else:
-            angle = 90
+            angle = SORTER_CENTER_ANGLE
             destination = "center"
 
         print(f"[Servos] Sorting {status} seed toward {destination}")
@@ -142,7 +149,7 @@ class ServoController:
             self.sorter.angle = angle
         time.sleep(1.2)
         if _USE_REAL_SERVOS:
-            self.sorter.angle = 90
+            self.sorter.angle = SORTER_CENTER_ANGLE
         time.sleep(0.5)
 
     def detach(self):
