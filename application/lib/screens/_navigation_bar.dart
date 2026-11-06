@@ -70,7 +70,13 @@ class _NavigationBarState extends State<NavigationBarWidget> {
         }
         return Scaffold( 
           body: _screens[_selectedIndex],
-          bottomNavigationBar: NavigationBar(destinations: const [
+          bottomNavigationBar: NavigationBar(
+            onDestinationSelected: (index){
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            destinations: const [
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
             NavigationDestination(icon: Icon(Icons.camera_alt), label: 'Camera'),
             NavigationDestination(icon: Icon(Icons.checklist), label: 'Reports'),
