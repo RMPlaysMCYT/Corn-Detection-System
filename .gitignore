@@ -1,6 +1,9 @@
 venv
 venv_directml
 
+env
+/env/
+
 /.venv/
 .venv
 

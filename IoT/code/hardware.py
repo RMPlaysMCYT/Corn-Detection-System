@@ -5,6 +5,7 @@ import numpy as np
 
 from picamera2 import Picamera2
 
+
 def is_raspberry_pi():
     try:
         with open("/proc/device-tree/model", "r", encoding="utf-8") as f:
@@ -13,28 +14,25 @@ def is_raspberry_pi():
     except Exception:
         return False
 
+
 class Camera:
     """
     Camera wrapper using picamera2, required for Raspberry Pi 5 / Bookworm.
     Returns frames in BGR format, compatible with the rest of your pipeline.
     """
+
     def __init__(self, camera_id=0):
         self.picam = Picamera2()
-        
         config = self.picam.create_preview_configuration(
             main={"size": (1080, 1080), "format": "RGB888"}
         )
         self.picam.configure(config)
         self.picam.start()
-        
         time.sleep(1.5)
 
     def read_frame(self):
         try:
-            # capture_array returns an RGB888 numpy array
             frame_rgb = self.picam.capture_array()
-            
-            # Convert RGB to BGR for OpenCV compatibility
             frame_bgr = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
             return frame_bgr
         except Exception as e:
@@ -47,50 +45,132 @@ class Camera:
         except Exception:
             pass
 
+
+# ---------------------------------------------------------------------- #
+#  Servo configuration
+# ---------------------------------------------------------------------- #
+CONVEYOR_1_PIN = 18   # Physical pin 12, BCM GPIO 18
+CONVEYOR_2_PIN = 12   # Physical pin 32, BCM GPIO 12
+STOPPER_PIN = 13      # Physical pin 33, BCM GPIO 13
+SORTER_PIN = 19       # Physical pin 35, BCM GPIO 19
+MIN_PULSE_WIDTH = 0.0005
+MAX_PULSE_WIDTH = 0.0025
+
+# Tune these positions to match the installed servo horns and linkage.
+STOPPER_HOME_ANGLE = 90
+STOPPER_ACTUATED_ANGLE = 0
+SORTER_CENTER_ANGLE = 0
+SORTER_HEALTHY_ANGLE = 45
+SORTER_UNHEALTHY_ANGLE = -45
+
+
 if platform.system() == "Linux" and is_raspberry_pi():
     try:
-        from gpiozero import AngularServo
+        from gpiozero import AngularServo, Servo as ContinuousServo
     except Exception:
-        print("[WARN] Pi GPIO not available; using mock servo.")
-        class Servo:
-            def __init__(self, pin=18, min_pulse=0.0006, max_pulse=0.0023,
-                         default_angle=0, reject_angle=90):
-                self.default_angle = default_angle
-                self.reject_angle = reject_angle
-                print(f"[MockServo] Initialized on virtual pin {pin}")
-            def reject(self):
-                print("[MockServo] Rejecting seed...")
-                time.sleep(0.3)
-            def detach(self):
-                print("[MockServo] Detached")
+        print("[WARN] Pi GPIO not available; using mock servos.")
+        _USE_REAL_SERVOS = False
     else:
-        class Servo:
-            """Wrapper for the SG90 servo (real hardware, Raspberry Pi only)."""
-            def __init__(self, pin=18, min_pulse=0.0006, max_pulse=0.0023,
-                         default_angle=0, reject_angle=90):
-                self.servo = AngularServo(pin, min_pulse_width=min_pulse, max_pulse_width=max_pulse)
-                self.default_angle = default_angle
-                self.reject_angle = reject_angle
-                self.servo.angle = default_angle
-            def reject(self):
-                self.servo.angle = self.reject_angle
-                time.sleep(0.5)
-                self.servo.angle = self.default_angle
-                time.sleep(0.5)
-            def detach(self):
-                self.servo.detach()
+        _USE_REAL_SERVOS = True
 else:
-    class Servo:
-        """Mock servo for testing off-Pi (e.g. Windows or a Linux PC) — logs instead of moving hardware."""
-        def __init__(self, pin=18, min_pulse=0.0006, max_pulse=0.0023,
-                     default_angle=0, reject_angle=90):
-            self.default_angle = default_angle
-            self.reject_angle = reject_angle
-            print(f"[MockServo] Initialized on virtual pin {pin}")
+    _USE_REAL_SERVOS = False
 
-        def reject(self):
-            print("[MockServo] Rejecting seed...")
-            time.sleep(0.3)
 
-        def detach(self):
-            print("[MockServo] Detached")
+class ServoController:
+    """Controls two continuous-rotation conveyors and two positional servos."""
+
+    def __init__(self):
+        if _USE_REAL_SERVOS:
+            self.conveyor_1 = ContinuousServo(
+                CONVEYOR_1_PIN,
+                initial_value=None,
+                min_pulse_width=MIN_PULSE_WIDTH,
+                max_pulse_width=MAX_PULSE_WIDTH,
+            )
+            self.conveyor_2 = ContinuousServo(
+                CONVEYOR_2_PIN,
+                initial_value=None,
+                min_pulse_width=MIN_PULSE_WIDTH,
+                max_pulse_width=MAX_PULSE_WIDTH,
+            )
+            self.stopper = AngularServo(
+                STOPPER_PIN,
+                min_angle=0,
+                max_angle=180,
+                min_pulse_width=MIN_PULSE_WIDTH,
+                max_pulse_width=MAX_PULSE_WIDTH,
+            )
+            # Sorter must accept negative angles because the healthy /
+            # unhealthy positions are on opposite sides of centre.
+            self.sorter = AngularServo(
+                SORTER_PIN,
+                min_angle=-90,
+                max_angle=180,
+                min_pulse_width=MIN_PULSE_WIDTH,
+                max_pulse_width=MAX_PULSE_WIDTH,
+            )
+            self.stopper.angle = STOPPER_HOME_ANGLE
+            self.sorter.angle = SORTER_CENTER_ANGLE
+        else:
+            print(
+                "[MockServos] Initialized: conveyors BCM 18/12, "
+                "stopper BCM 13, sorter BCM 19"
+            )
+
+    def start_conveyors(self, c1_speed=-0.8, c2_speed=-0.8):
+        print(f"[Servos] Starting conveyors: {c1_speed}, {c2_speed}")
+        if _USE_REAL_SERVOS:
+            self.conveyor_1.value = c1_speed
+            self.conveyor_2.value = c2_speed
+
+    def stop_conveyors(self):
+        print("[Servos] Stopping conveyors")
+        if _USE_REAL_SERVOS:
+            try:
+                self.conveyor_1.detach()
+                self.conveyor_2.detach()
+            except Exception:
+                pass
+
+    def trigger_stopper(self):
+        print("[Servos] Moving stopper down and back up")
+        if _USE_REAL_SERVOS:
+            self.stopper.angle = STOPPER_ACTUATED_ANGLE
+        time.sleep(1.0)
+        if _USE_REAL_SERVOS:
+            self.stopper.angle = STOPPER_HOME_ANGLE
+        time.sleep(0.5)
+
+    def sort_seed(self, status):
+        if status in ("healthy", "left"):
+            angle = SORTER_HEALTHY_ANGLE
+            destination = "healthy/left"
+        elif status in ("unhealthy", "right"):
+            angle = SORTER_UNHEALTHY_ANGLE
+            destination = "unhealthy/right"
+        else:
+            angle = SORTER_CENTER_ANGLE
+            destination = "center"
+
+        print(f"[Servos] Sorting {status} seed toward {destination}")
+        if _USE_REAL_SERVOS:
+            self.sorter.angle = angle
+        time.sleep(1.2)
+        if _USE_REAL_SERVOS:
+            self.sorter.angle = SORTER_CENTER_ANGLE
+        time.sleep(0.5)
+
+    def detach(self):
+        if _USE_REAL_SERVOS:
+            self.stop_conveyors()
+            for servo in (
+                self.conveyor_1,
+                self.conveyor_2,
+                self.stopper,
+                self.sorter,
+            ):
+                try:
+                    servo.detach()
+                except Exception:
+                    pass
+        print("[Servos] Detached")

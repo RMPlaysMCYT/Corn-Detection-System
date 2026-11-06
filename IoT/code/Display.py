@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import threading
 import time
-from hardware import Camera, Servo
+from hardware import Camera, ServoController
 from model import CornClassifier, MockClassifier
 from sorter import Sorter
 import os
@@ -62,7 +62,7 @@ class CornSorterApp:
             print("Model loaded.")
             
         self.camera = Camera(camera_id=0)
-        self.servo = Servo(pin=18)
+        self.servo = ServoController()
         self.sorter = None
         self.show_main_page()
     
@@ -192,6 +192,7 @@ class CornSorterApp:
         self.main_unhealthy.config(text="0")
         
         self.show_sorting_page()
+        self.servo.start_conveyors()
         self.sorter = Sorter(
             camera=self.camera,
             servo=self.servo,
@@ -228,6 +229,7 @@ class CornSorterApp:
         if self.sorter:
             self.sorter.stop()
             self.sorter = None
+        self.servo.stop_conveyors()
         self.show_main_page()
 
     
@@ -235,6 +237,7 @@ class CornSorterApp:
         """Release hardware when window is closed."""
         if self.sorter:
             self.sorter.stop()
+        self.servo.stop_conveyors()
         self.camera.release()
         self.servo.detach()
         self.root.destroy()
