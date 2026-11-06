@@ -72,7 +72,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
           body: _screens[_selectedIndex],
           bottomNavigationBar: NavigationBar(destinations: const [
             NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-            NavigationDestination(icon: Icon(Icons.camera_alt), label: 'Home'),
+            NavigationDestination(icon: Icon(Icons.camera_alt), label: 'Camera'),
             NavigationDestination(icon: Icon(Icons.checklist), label: 'Home'),
             NavigationDestination(icon: Icon(Icons.settings), label: 'Home'),
           ]),
