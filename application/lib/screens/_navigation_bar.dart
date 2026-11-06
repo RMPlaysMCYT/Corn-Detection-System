@@ -71,6 +71,7 @@ class _NavigationBarState extends State<NavigationBarWidget> {
         return Scaffold( 
           body: _screens[_selectedIndex],
           bottomNavigationBar: NavigationBar(
+            selectedIndex: _selectedIndex,
             onDestinationSelected: (index){
               setState(() {
                 _selectedIndex = index;
