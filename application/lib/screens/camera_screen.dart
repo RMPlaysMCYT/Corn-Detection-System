@@ -1,8 +1,23 @@
+import 'package:camera/camera.dart';
 import 'package:cornseedapplication/utilities/buttons.dart';
 import 'package:flutter/material.dart';
 
-class CameraScreen extends StatelessWidget {
+class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
+  @override
+  State<CameraScreen> createState() => _CameraStateScreen();
+}
+
+class _CameraStateScreen extends State<CameraScreen>{
+
+  CameraController? _controller;
+  List<CameraDescription>? _cameras;
+  bool _isInitializing = true;
+  String? _errorMessage;
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
