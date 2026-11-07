@@ -27,7 +27,7 @@ class _CameraStateScreen extends State<CameraScreen>{
       _cameras = await availableCameras();
       if (_cameras != null && _cameras!.isNotEmpty){
         _controller = CameraController(
-          _cameras[0],
+          _cameras![0],
           ResolutionPreset.medium,
           enableAudio: false
           );
@@ -39,6 +39,33 @@ class _CameraStateScreen extends State<CameraScreen>{
         setState(() {
           _isInitializing = false;
         });
+      }
+    }
+  }
+
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _captureAndScan() async {
+    if (_controller == null || !_controller!.value.isInitialized) return;
+
+    try {
+      final XFile image = await _controller!.takePicture();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Captured corn seed image: ${image.path}')),
+        );
+        // Pass image.path to your CNN classification model pipeline here
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error taking picture: $e')),
+        );
       }
     }
   }
