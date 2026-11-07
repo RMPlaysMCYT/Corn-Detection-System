@@ -4,33 +4,38 @@ import 'package:flutter/material.dart';
 
 class CameraScreen extends StatefulWidget {
   const CameraScreen({super.key});
+
   @override
-  State<CameraScreen> createState() => _CameraStateScreen();
+  State<CameraScreen> createState() => _CameraScreenState();
 }
 
-class _CameraStateScreen extends State<CameraScreen>{
-
+class _CameraScreenState extends State<CameraScreen> {
   CameraController? _controller;
   List<CameraDescription>? _cameras;
   bool _isInitializing = true;
   String? _errorMessage;
 
-
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    _initializeCameras();
+    _initializeCamera();
   }
 
-  Future<void> _initializeCameras() async{
-    try{
+  Future<void> _initializeCamera() async {
+    try {
+      // Get list of available hardware cameras (webcam or mobile camera)
       _cameras = await availableCameras();
-      if (_cameras != null && _cameras!.isNotEmpty){
+
+      if (_cameras != null && _cameras!.isNotEmpty) {
         _controller = CameraController(
-          _cameras![0],
+          _cameras![0], // Select primary camera
           ResolutionPreset.medium,
-          enableAudio: false
-          );
+          enableAudio: false,
+        );
+
+        await _controller!.initialize();
+      } else {
+        _errorMessage = 'No camera hardware found on this device.';
       }
     } catch (e) {
       _errorMessage = 'Failed to load camera: $e';
@@ -42,7 +47,6 @@ class _CameraStateScreen extends State<CameraScreen>{
       }
     }
   }
-
 
   @override
   void dispose() {
@@ -77,21 +81,26 @@ class _CameraStateScreen extends State<CameraScreen>{
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Dynamic Camera Viewport
               Container(
-                height: 200, 
-                width: 600, 
-                color: Colors.blue,
+                height: 350,
+                width: 600,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
                 clipBehavior: Clip.antiAlias,
                 child: _buildCameraPreview(),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 20),
               Group5ButtonBox(
-                text: 'Capture', 
+                text: 'Capture & Scan',
                 onPressed: _controller != null && _controller!.value.isInitialized
-                  ? _captureAndScan
-                  : () {},
-              )
+                    ? _captureAndScan
+                    : () {},
+              ),
             ],
           ),
         ),
@@ -99,22 +108,23 @@ class _CameraStateScreen extends State<CameraScreen>{
     );
   }
 
-  Widget _buildCameraPreview(){
-    if (_isInitializing){
+  Widget _buildCameraPreview() {
+    if (_isInitializing) {
       return const Center(
-        child: CircularProgressIndicator(color: Colors.red,),
+        child: CircularProgressIndicator(color: Colors.blue),
       );
     }
 
-    if(_errorMessage != null){
+    if (_errorMessage != null) {
       return Center(
         child: Text(
           _errorMessage!,
-          style: const TextStyle(color: Colors.green),
+          style: const TextStyle(color: Colors.white),
           textAlign: TextAlign.center,
         ),
       );
     }
+
     if (_controller != null && _controller!.value.isInitialized) {
       return AspectRatio(
         aspectRatio: _controller!.value.aspectRatio,
