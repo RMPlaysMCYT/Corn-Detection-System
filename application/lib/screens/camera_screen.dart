@@ -78,12 +78,49 @@ class _CameraStateScreen extends State<CameraScreen>{
         child: Center(
           child: Column(
             children: [
-              Container(height: 200, width: 600, color: Colors.blue),
+              Container(
+                height: 200, 
+                width: 600, 
+                color: Colors.blue,
+                clipBehavior: Clip.antiAlias,
+                child: _buildCameraPreview(),
+              ),
               const SizedBox(height: 16),
               Group5ButtonBox(text: 'Capture', onPressed: (){})
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildCameraPreview(){
+    if (_isInitializing){
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.red,),
+      );
+    }
+
+    if(_errorMessage != null){
+      return Center(
+        child: Text(
+          _errorMessage!,
+          style: const TextStyle(color: Colors.green),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
+    if (_controller != null && _controller!.value.isInitialized) {
+      return AspectRatio(
+        aspectRatio: _controller!.value.aspectRatio,
+        child: CameraPreview(_controller!),
+      );
+    }
+
+    return const Center(
+      child: Text(
+        'Camera is not available',
+        style: TextStyle(color: Colors.white),
       ),
     );
   }
