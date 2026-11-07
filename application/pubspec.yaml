@@ -41,6 +41,7 @@ dependencies:
   nativeapi: ^0.1.4
   fl_chart: ^0.65.0
   tflite_flutter: ^0.10.4
+  camera_windows: ^0.3.0
 
 dev_dependencies:
   flutter_test:
