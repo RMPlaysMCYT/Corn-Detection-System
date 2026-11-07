@@ -16,8 +16,32 @@ class _CameraStateScreen extends State<CameraScreen>{
   String? _errorMessage;
 
 
+  @override
+  void initState(){
+    super.initState();
+    _initializeCameras();
+  }
 
-
+  Future<void> _initializeCameras() async{
+    try{
+      _cameras = await availableCameras();
+      if (_cameras != null && _cameras!.isNotEmpty){
+        _controller = CameraController(
+          _cameras[0],
+          ResolutionPreset.medium,
+          enableAudio: false
+          );
+      }
+    } catch (e) {
+      _errorMessage = 'Failed to load camera: $e';
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isInitializing = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
