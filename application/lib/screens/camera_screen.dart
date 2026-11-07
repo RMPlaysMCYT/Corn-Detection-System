@@ -86,7 +86,12 @@ class _CameraStateScreen extends State<CameraScreen>{
                 child: _buildCameraPreview(),
               ),
               const SizedBox(height: 16),
-              Group5ButtonBox(text: 'Capture', onPressed: (){})
+              Group5ButtonBox(
+                text: 'Capture', 
+                onPressed: _controller != null && _controller!.value.isInitialized
+                  ? _captureAndScan
+                  : () {},
+              )
             ],
           ),
         ),
